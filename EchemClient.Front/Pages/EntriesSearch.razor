@@ -31,13 +31,35 @@
     </MudStack>
 </MudStack>
 
-
+<MudStack Class="pa-10">
+    <MudDataGrid T="CVEntry" Items="@ViewModel.Entries" Filterable="true" SortMode="SortMode.Multiple" Hideable="false" Hover="true"
+                 FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6">
+        <ToolBarContent>
+            <MudText Class="ml-5 mt-5" Typo="Typo.h3"> Entries </MudText>
+        </ToolBarContent>
+        <Columns>
+            <PropertyColumn Property="x => x.Name"/>
+            <PropertyColumn Title="Material" Property="x => x.We_Electrode._Descriptor.Material"/>
+            <PropertyColumn Title="Orientation" Property="x => x.We_Electrode._Descriptor.Crystallographic_Orientation"/>
+            <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte.Components[0]"/>
+            <PropertyColumn Title="Year" Property="x => x.Bibliography.Year"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="CVEntry" />
+        </PagerContent>
+    </MudDataGrid>
+</MudStack>
 
 @code {
 
     protected override void OnInitialized()
     {
         Deserialize();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.OnInitializedAsync();
     }
 
     private void Deserialize()
@@ -59,6 +81,7 @@
                 Console.WriteLine($"Error deserializing JSON: {ex.Message}");
             }
         }
-
     }
+
+    private string material = "_descriptor";
 }

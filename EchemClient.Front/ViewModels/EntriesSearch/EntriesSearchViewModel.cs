@@ -26,10 +26,12 @@ namespace EchemClient.Front.ViewModels.EntriesSearch
 
         public async Task OnInitializedAsync()
         {
+            Entries.Clear();
             foreach (var element in Elements) 
             {
                 Entries.AddRange(await _entryService.GetCVEntriesByMaterialAsync(element.Symbol));
             }
+            await _jsRuntime.InvokeVoidAsync("console.log", $"{Entries[0].Citation}");
         }
     }
 }
