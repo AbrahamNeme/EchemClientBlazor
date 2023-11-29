@@ -1,0 +1,108 @@
+﻿
+<MudPaper Class="cell" Elevation="15" Style="@($"background:{cellColor};")" Outlined="@hovered" @onmouseover="MouseOver" @onmouseout="MouseOut"
+          @onclick="OnClick">
+    <MudStack Style="color: white;">
+        <MudText Typo="Typo.h5"><b>@element.Symbol</b></MudText>
+    </MudStack>
+</MudPaper>
+
+
+
+@code 
+{
+    [Parameter]
+    public IHomeViewModel ViewModel { get; set; } = new HomeViewModel();
+
+    [Parameter]
+    public Element element { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnFunctionExecuted { get; set; }
+
+    protected override void OnInitialized()
+    {
+        DefineCellColor();
+    }
+
+    private async Task OnClick()
+    {
+        ViewModel.SearchString = $"{ViewModel.SearchString} {element.Symbol}";
+        await OnFunctionExecuted.InvokeAsync();
+    }
+
+    private bool hovered = false;
+
+    private async Task MouseOver()
+    {
+        ViewModel.HoveredElement = element;
+        hovered = true;
+        DefineHoveredCellColor();
+        await OnFunctionExecuted.InvokeAsync();
+    }
+
+    private void MouseOut()
+    {
+        hovered = false;
+        DefineCellColor();
+    }
+
+    string cellColor = "";
+
+    private void DefineCellColor()
+    {
+        if (element.Group == "alkali metals")
+            cellColor = Colors.Teal.Darken2;
+        else if (element.Group == "alkaline earth metals")
+            cellColor = Colors.Red.Darken3;
+        else if (element.Group == "transition metals")
+            cellColor = Colors.Purple.Darken3;
+        else if (element.Group == "post-transition metals")
+            cellColor = Colors.Green.Darken3;
+        else if (element.Group == "metalloids")
+            cellColor = Colors.Lime.Darken4;
+        else if (element.Group == "reactive non-metals")
+            cellColor = Colors.Indigo.Default;
+        else if (element.Group == "noble gases")
+            cellColor = Colors.Pink.Darken3;
+        else if (element.Group == "lanthanoids")
+            cellColor = Colors.Blue.Default;
+        else if (element.Group == "actinoids")
+            cellColor = Colors.Brown.Default;
+        else
+            cellColor = Colors.Grey.Darken2;
+    }
+
+    private void DefineHoveredCellColor()
+    {
+        if (element.Group == "alkali metals")
+            cellColor = Colors.Teal.Default;
+        else if (element.Group == "alkaline earth metals")
+            cellColor = Colors.Red.Darken1;
+        else if (element.Group == "transition metals")
+            cellColor = Colors.Purple.Darken1;
+        else if (element.Group == "post-transition metals")
+            cellColor = Colors.Green.Darken1;
+        else if (element.Group == "metalloids")
+            cellColor = Colors.Lime.Darken2;
+        else if (element.Group == "reactive non-metals")
+            cellColor = Colors.Indigo.Lighten2;
+        else if (element.Group == "noble gases")
+            cellColor = Colors.Pink.Darken1;
+        else if (element.Group == "lanthanoids")
+            cellColor = Colors.Blue.Lighten2;
+        else if (element.Group == "actinoids")
+            cellColor = Colors.Brown.Lighten2;
+        else
+            cellColor = Colors.Grey.Default;
+    }
+}
+
+<style>
+    .cell {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

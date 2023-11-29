@@ -1,0 +1,46 @@
+﻿
+<MudCard Class="mr-5" Elevation="6" Style="@($"background:{DefineCardColor()}; width:160px; height:200px; color: white;")">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudStack Row="true" Justify="Justify.SpaceBetween">
+                <MudText Typo="Typo.body2">@Element.AtomicNumber</MudText>
+                    <MudText Typo="Typo.body2">@Element.AtomicWeight</MudText>
+                </MudStack>
+            </CardHeaderContent>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudStack AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h2">@Element.Symbol</MudText>
+                <MudText Typo="Typo.h6">@Element.Name</MudText>
+            </MudStack>
+        </MudCardContent>
+    </MudCard>
+
+    @code {
+    [Parameter]
+    public Element Element { get; set; } = new();
+
+    private string DefineCardColor()
+    {
+        if (Element.Group == "alkali metals")
+            return Colors.Teal.Darken2;
+        else if (Element.Group == "alkaline earth metals")
+            return Colors.Red.Darken3;
+        else if (Element.Group == "transition metals")
+            return Colors.Purple.Darken3;
+        else if (Element.Group == "post-transition metals")
+            return Colors.Green.Darken3;
+        else if (Element.Group == "metalloids")
+            return Colors.Lime.Darken4;
+        else if (Element.Group == "reactive non-metals")
+            return Colors.Indigo.Default;
+        else if (Element.Group == "noble gases")
+            return Colors.Pink.Darken3;
+        else if (Element.Group == "lanthanoids")
+            return Colors.Blue.Default;
+        else if (Element.Group == "actinoids")
+            return Colors.Brown.Default;
+        else
+            return Colors.Grey.Darken2;
+    }
+}

@@ -1,0 +1,48 @@
+﻿@inherits LayoutComponentBase
+@inject MudThemeProvider ThemeProvider
+@inject ISyncLocalStorageService LocalStorage
+@inject IThemeService ThemeService
+@implements IDisposable
+
+<MudThemeProvider @ref="@ThemeProvider" IsDarkMode="@GetTheme()" Theme="@appTheme"/>
+<MudDialogProvider FullWidth="true" MaxWidth="MaxWidth.Medium" CloseButton="true" Position="DialogPosition.Center"
+                   CloseOnEscapeKey="true"/>
+<MudSnackbarProvider />
+
+
+<MudLayout>
+    <MudMainContent>
+        @Body
+    </MudMainContent>
+</MudLayout>
+
+@code {
+
+    MudTheme appTheme = new MudTheme()
+    {
+        Palette = new PaletteLight()
+        {
+            Primary = "#2196F3",
+        },
+        PaletteDark = new PaletteDark()
+        {
+            Primary = "#2196F3",
+        }
+    };
+
+    protected override void OnInitialized()
+    {
+        ThemeService.ThemeChanged += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        ThemeService.ThemeChanged -= StateHasChanged;
+    }
+
+    private bool GetTheme()
+    {
+        bool theme = LocalStorage.GetItem<bool>("Theme");
+        return theme;
+    }
+}

@@ -1,0 +1,34 @@
+﻿@inject IThemeService ThemeService
+@inject ISyncLocalStorageService LocalStorage
+
+<MudToggleIconButton Toggled=@isDarkTheme ToggledChanged="@((e) => SetTheme(e))" Icon="@SetButtonIcon()" Style="color: white;"
+                     ToggledIcon="@SetButtonIcon()" />
+
+@code {
+    private bool isDarkTheme;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isDarkTheme = await ThemeService.GetTheme();
+    }
+
+    private async Task SetTheme(bool theme)
+    {
+        await ThemeService.SetTheme(theme);
+        isDarkTheme = await ThemeService.GetTheme();
+    }
+
+    private string SetButtonIcon()
+    {
+        string buttonIcon;
+        if (isDarkTheme)
+        {
+            buttonIcon = Icons.Material.Filled.DarkMode;
+        }
+        else
+        {
+            buttonIcon = Icons.Material.Filled.LightMode;
+        }
+        return buttonIcon;
+    }
+}

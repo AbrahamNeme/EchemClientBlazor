@@ -1,0 +1,182 @@
+﻿@page "/"
+@using System.Text.Json
+@inject IHomeViewModel ViewModel
+@inject NavigationManager NavigationManager
+
+<!--  Top App Bar  -->
+<MudAppBar Elevation="7" Color="Color.Primary">
+    <LogoAppBar />
+    <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://echemdb.github.io/unitpackage/index.html" StartIcon="@Icons.Custom.FileFormats.FileDocument">Documentation</MudButton>
+        <ThemeButton/>
+    </MudStack>
+</MudAppBar>
+
+<!--  Search Bar & Button  -->
+<MudStack Class="mt-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    
+    <MudStack Row="true" Style="width:50%;">
+        <MudTextField @bind-Value="ViewModel.SearchString" Label="Type in the element you are looking for" Adornment="Adornment.End" Immediate="true" Clearable="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" AdornmentColor="Color.Primary" Class="mt-0" Variant="Variant.Outlined"></MudTextField>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendElements">Search</MudButton>
+    </MudStack>
+</MudStack>
+
+<MudStack Class="pa-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <MudStack>
+        <!--  Hovered Element Card  -->
+        <ElementCard Element="@ViewModel.HoveredElement"/>
+
+        <!--  Periodic Table Legend  -->
+        <MudStack Class="mt-5" Justify="Justify.Center">
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Teal.Darken2};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Alkali metals</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Red.Darken3};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Alkaline earth metals</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Purple.Darken3};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Transition metals</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Green.Darken3};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Post-transition metals</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Lime.Darken4};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Metalloids</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Indigo.Default};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Reactive non-metals</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Pink.Darken3};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Noble gases</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Blue.Default};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Lanthanides</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Brown.Default};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Actinides</MudText>
+                </MudStack>
+                <MudStack Row="true">
+                    <MudPaper Class="legend" Elevation="6" Style="@($"background:{Colors.Grey.Darken2};")"></MudPaper>
+                    <MudText Typo="Typo.caption">Unknown properties</MudText>
+                </MudStack>
+        </MudStack>
+    </MudStack>
+
+        <!--  Periodic Table Cells  -->
+    <MudPaper Class="pa-5" Outlined="true">
+        <MudStack Style="padding-bottom:10px" Row="true">
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[0]" OnFunctionExecuted="HandleRenderer"/>
+            <MudSpacer />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[1]" OnFunctionExecuted="HandleRenderer" />
+        </MudStack>
+        <MudStack Style="padding-bottom:10px" Row="true">
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[2]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[3]" OnFunctionExecuted="HandleRenderer" />
+            <MudSpacer />
+            @for (int i = 4; i <= 9; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+        <MudStack Style="padding-bottom:10px" Row="true">
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[10]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[11]" OnFunctionExecuted="HandleRenderer" />
+            <MudSpacer />
+            @for (int i = 12; i <= 17; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+        <MudStack Style="padding-bottom:10px" Row="true">
+            @for (int i = 18; i <= 35; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+        <MudStack Style="padding-bottom:10px" Row="true">
+            @for (int i = 36; i <= 53; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+        <MudStack Style="padding-bottom:10px" Row="true">
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[54]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[55]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[56]" OnFunctionExecuted="HandleRenderer" />
+            @for (int i = 71; i <= 85; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+        <MudStack Style="padding-bottom:30px" Row="true">
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[86]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[87]" OnFunctionExecuted="HandleRenderer" />
+            <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[88]" OnFunctionExecuted="HandleRenderer" />
+            @for (int i = 103; i <= 117; i++)
+            {
+                <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+            }
+        </MudStack>
+
+        <MudStack AlignItems="AlignItems.Center">
+            <MudStack Row="true">
+                @for (int i = 57; i <= 70; i++)
+                {
+                    <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+                }
+            </MudStack>
+            <MudStack Row="true">
+                @for (int i = 89; i <= 102; i++)
+                {
+                    <ElementCell ViewModel="@ViewModel" element="@ViewModel.Elements[i]" OnFunctionExecuted="HandleRenderer" />
+                }
+            </MudStack>
+        </MudStack>
+    </MudPaper>
+</MudStack>
+
+<!--  University Logos  -->
+<MudStack Class="pa-5 mt-10" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <MudText Typo="Typo.h5"><b>Project developed through the colaboration of:</b></MudText>
+    <MudStack Class="mt-5" Row="true">
+        <MudImage Src="/images/Fritz-Haber-Institut.png" Width="450" Height="250" />
+        <MudImage Src="/images/Logo_Berliner_Hochschule_fur_Technik.png" Width="450" Height="250" />
+    </MudStack>
+</MudStack>
+
+@code
+{
+    private void HandleRenderer()
+    {
+        StateHasChanged();
+    }
+
+    public void SendElements()
+    {
+        var serializedList = JsonSerializer.Serialize(ViewModel.GetSelectedElements());
+        ViewModel.SearchString = "";
+        NavigationManager.NavigateTo($"/entries-search?list={Uri.EscapeDataString(serializedList)}");
+    }
+}
+
+<style>
+
+    .legend {
+        width: 20px;
+        height: 20px;
+        display: flex;
+    }
+</style>

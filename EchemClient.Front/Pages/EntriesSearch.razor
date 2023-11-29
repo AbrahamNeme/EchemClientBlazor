@@ -1,0 +1,64 @@
+﻿@page "/entries-search"
+@using System.Text.Json
+@inject IEntriesSearchViewModel ViewModel
+@inject IMessenger Messenger
+@inject NavigationManager NavigationManager
+
+<MudAppBar Elevation="7" Color="Color.Primary">
+    <LogoAppBar />
+    <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/" StartIcon="@Icons.Material.Filled.Home">Return to table</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://echemdb.github.io/unitpackage/index.html" StartIcon="@Icons.Custom.FileFormats.FileDocument">Documentation</MudButton>
+        <ThemeButton />
+    </MudStack>
+</MudAppBar>
+
+<MudStack Class="pa-10">
+    <MudStack Row="true">
+        <MudText Typo="Typo.h3"><b>Search results of the element(s):</b></MudText>
+        <MudSpacer />
+        
+    </MudStack>
+    <MudStack Class="mt-5" Row="true">
+        @foreach (var element in ViewModel.Elements)
+        {
+            <ElementCard Element="element"/>
+        }
+    </MudStack>
+</MudStack>
+
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        Deserialize();
+    }
+
+    private void Deserialize()
+    {
+        var urlParameter = NavigationManager.Uri;
+        var queryString = Uri.UnescapeDataString(new Uri(urlParameter).Query.TrimStart('?'));
+        Console.WriteLine($"serializing JSON list: {queryString}");
+
+        if (!string.IsNullOrEmpty(queryString))
+        {
+            var serializedList = Uri.UnescapeDataString(queryString.Split('=')[1]);
+            try
+            {
+                ViewModel.Elements = JsonSerializer.Deserialize<List<Element>>(serializedList) ?? new List<Element>();
+            }
+            catch (JsonException ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+            }
+        }
+
+    }
+}
