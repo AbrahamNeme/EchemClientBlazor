@@ -1,7 +1,6 @@
 ﻿@page "/entries-search"
 @using System.Text.Json
 @inject IEntriesSearchViewModel ViewModel
-@inject IMessenger Messenger
 @inject NavigationManager NavigationManager
 
 <MudAppBar Elevation="7" Color="Color.Primary">
@@ -36,13 +35,24 @@
                  FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6">
         <ToolBarContent>
             <MudText Class="ml-5 mt-5" Typo="Typo.h3"> Entries </MudText>
+            <MudSpacer />
+            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
         </ToolBarContent>
         <Columns>
+            <SelectColumn T="CVEntry"/>
             <PropertyColumn Property="x => x.Name"/>
             <PropertyColumn Title="Material" Property="x => x.We_Electrode._Descriptor.Material"/>
-            <PropertyColumn Title="Orientation" Property="x => x.We_Electrode._Descriptor.Crystallographic_Orientation"/>
-            <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte.Components[0]"/>
+            <PropertyColumn Title="Orientation" Property="x => x.We_Electrode._Descriptor.Crystallographic_orientation"/>
+            <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte._Descriptor.Type"/>
             <PropertyColumn Title="Year" Property="x => x.Bibliography.Year"/>
+            <TemplateColumn Filterable="false" Sortable="false">
+                <CellTemplate>
+                    <MudStack Row="true">
+                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.ShowChart" OnClick="@(e => GoToEntryDashboard(context.Item.Name))"/>
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
         </Columns>
         <PagerContent>
             <MudDataGridPager T="CVEntry" />
@@ -61,6 +71,26 @@
     {
         await ViewModel.OnInitializedAsync();
     }
+
+    private string _searchString = string.Empty;
+
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<CVEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.We_Electrode._Descriptor.Material.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Bibliography.Year}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
 
     private void Deserialize()
     {
@@ -83,5 +113,9 @@
         }
     }
 
-    private string material = "_descriptor";
+    private void GoToEntryDashboard(string entryName)
+    {
+        var serializedName = JsonSerializer.Serialize(entryName);
+        NavigationManager.NavigateTo($"/entry-dashboard?name={Uri.EscapeDataString(serializedName)}");
+    }
 }

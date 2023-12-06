@@ -1,0 +1,83 @@
+﻿@page "/entry-dashboard"
+@using System.Text.Json
+@using ChartJs.Blazor.LineChart
+@inject IEntryDashboardViewModel ViewModel
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<MudAppBar Elevation="7" Color="Color.Primary">
+    <LogoAppBar />
+    <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/" StartIcon="@Icons.Material.Filled.Home">Return to table</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://echemdb.github.io/unitpackage/index.html" StartIcon="@Icons.Custom.FileFormats.FileDocument">Documentation</MudButton>
+        <ThemeButton />
+    </MudStack>
+</MudAppBar>
+
+<MudStack Class="pa-10" AlignItems="AlignItems.Center">
+    <MudStack Row="true" Style="width:700px; height:550px;">
+        <canvas id="mainChart"></canvas>
+        <canvas id="refChart"></canvas>
+    </MudStack>
+</MudStack>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        Deserialize();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.OnInitializedAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("drawCyclicVoltammogram", "mainChart", "Current Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J,
+                                                ViewModel.Entry.JUnit, ViewModel.Entry.E, ViewModel.Entry.EUnit);
+                await JSRuntime.InvokeVoidAsync("drawCyclicVoltammogram", "refChart", "Reference Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J,
+                                                ViewModel.Entry.JUnit, ViewModel.Entry.E, ViewModel.Entry.EUnit);
+
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("updateCyclicVoltammogram", "mainChart", "Current Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J, ViewModel.Entry.E);
+                await JSRuntime.InvokeVoidAsync("updateCyclicVoltammogram", "refChart", "Reference Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J, ViewModel.Entry.E);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void Deserialize()
+    {
+        var urlParameter = NavigationManager.Uri;
+        var queryString = Uri.UnescapeDataString(new Uri(urlParameter).Query.TrimStart('?'));
+
+        if (!string.IsNullOrEmpty(queryString))
+        {
+            var serializedName = Uri.UnescapeDataString(queryString.Split('=')[1]);
+            try
+            {
+                ViewModel.EntryName = JsonSerializer.Deserialize<string>(serializedName) ?? "";
+            }
+            catch (JsonException ex)
+            {
+                // Log or handle the exception
+                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
+            }
+        }
+    }
+}

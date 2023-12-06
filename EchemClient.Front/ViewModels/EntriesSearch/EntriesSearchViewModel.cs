@@ -1,9 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Messaging;
 using EchemClient.Front.Models;
 using EchemClient.Front.Services.EntryService;
 using Microsoft.JSInterop;
-using System.Diagnostics;
 
 namespace EchemClient.Front.ViewModels.EntriesSearch
 {
