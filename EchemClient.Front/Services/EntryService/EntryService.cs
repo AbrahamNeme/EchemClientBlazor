@@ -13,39 +13,54 @@ namespace EchemClient.Front.Services.EntryService
 
         public async Task<List<CVEntry>> GetAllCVEntriesAsync()
         {
-            var response = await _httpClient.GetFromJsonAsync<List<CVEntry>>("api/all/");
-            if (response != null)
+            try
             {
-                return response;
+                var response = await _httpClient.GetFromJsonAsync<List<CVEntry>>("api/all/");
+                if (response != null)
+                {
+                    return response;
+                }
+                else { return []; }
             }
-            else
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return [];
             }
         }
 
         public async Task<List<CVEntry>> GetCVEntriesByMaterialAsync(string material)
         {
-            var response = await _httpClient.GetFromJsonAsync<List<CVEntry>>($"api/entrybymaterial/{material}/");
-            if (response != null)
+            try
             {
-                return response;
+                var response = await _httpClient.GetFromJsonAsync<List<CVEntry>>($"api/entrybymaterial/{material}/");
+                if (response != null)
+                {
+                    return response;
+                }
+                else { return []; }
             }
-            else
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return [];
             }
         }
 
         public async Task<CVEntry> GetCVEntryByNameAsync(string name)
         {
-            var response = await _httpClient.GetFromJsonAsync<CVEntry>($"api/entrybyname/{name}/");
-            if (response != null)
+            try
             {
-                return response;
+                var response = await _httpClient.GetFromJsonAsync<CVEntry>($"api/entrybyname/{name}/");
+                if (response != null)
+                {
+                    return response;
+                }
+                else { return new CVEntry(); }
             }
-            else
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return new CVEntry();
             }
         }

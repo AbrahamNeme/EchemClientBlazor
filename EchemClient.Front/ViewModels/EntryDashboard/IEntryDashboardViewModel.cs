@@ -6,8 +6,9 @@ namespace EchemClient.Front.ViewModels.EntryDashboard
     {
         CVEntry Entry { get; set; }
         string EntryName { get; set; }
-        string[] XAxis { get; set; }
 
         Task OnInitializedAsync();
+        Task DrawCVCharts();
+        Task UpdateCVCharts();
     }
 }

@@ -1,9 +1,6 @@
 ﻿@page "/entry-dashboard"
-@using System.Text.Json
-@using ChartJs.Blazor.LineChart
 @inject IEntryDashboardViewModel ViewModel
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
 
 <MudAppBar Elevation="7" Color="Color.Primary">
     <LogoAppBar />
@@ -18,9 +15,11 @@
     </MudStack>
 </MudAppBar>
 
-<MudStack Class="pa-10" AlignItems="AlignItems.Center">
-    <MudStack Row="true" Style="width:700px; height:550px;">
+<MudStack Class="pa-10" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <MudStack Style="width:650px; height:550px;">
         <canvas id="mainChart"></canvas>
+    </MudStack>
+    <MudStack Style="width:650px; height:550px;">
         <canvas id="refChart"></canvas>
     </MudStack>
 </MudStack>
@@ -41,19 +40,8 @@
     {
         try
         {
-            if (firstRender)
-            {
-                await JSRuntime.InvokeVoidAsync("drawCyclicVoltammogram", "mainChart", "Current Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J,
-                                                ViewModel.Entry.JUnit, ViewModel.Entry.E, ViewModel.Entry.EUnit);
-                await JSRuntime.InvokeVoidAsync("drawCyclicVoltammogram", "refChart", "Reference Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J,
-                                                ViewModel.Entry.JUnit, ViewModel.Entry.E, ViewModel.Entry.EUnit);
-
-            }
-            else
-            {
-                await JSRuntime.InvokeVoidAsync("updateCyclicVoltammogram", "mainChart", "Current Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J, ViewModel.Entry.E);
-                await JSRuntime.InvokeVoidAsync("updateCyclicVoltammogram", "refChart", "Reference Cyclic Voltammogram", ViewModel.Entry.Name, ViewModel.Entry.J, ViewModel.Entry.E);
-            }
+            if (firstRender) { await ViewModel.DrawCVCharts(); }
+            else { await ViewModel.UpdateCVCharts(); }
         }
         catch (Exception ex)
         {

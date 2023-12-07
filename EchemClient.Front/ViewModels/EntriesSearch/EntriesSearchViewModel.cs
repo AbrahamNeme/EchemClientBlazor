@@ -29,7 +29,6 @@ namespace EchemClient.Front.ViewModels.EntriesSearch
             {
                 Entries.AddRange(await _entryService.GetCVEntriesByMaterialAsync(element.Symbol));
             }
-            await _jsRuntime.InvokeVoidAsync("console.log", $"{Entries[0].Citation}");
         }
     }
 }

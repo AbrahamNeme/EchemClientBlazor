@@ -1,5 +1,4 @@
 ﻿@page "/entries-search"
-@using System.Text.Json
 @inject IEntriesSearchViewModel ViewModel
 @inject NavigationManager NavigationManager
 
@@ -18,7 +17,7 @@
 
 <MudStack Class="pa-10">
     <MudStack Row="true">
-        <MudText Typo="Typo.h3"><b>Search results of the element(s):</b></MudText>
+        <MudText Typo="Typo.h3"><b>Search results of:</b></MudText>
         <MudSpacer />
         
     </MudStack>
@@ -30,35 +29,62 @@
     </MudStack>
 </MudStack>
 
-<MudStack Class="pa-10">
-    <MudDataGrid T="CVEntry" Items="@ViewModel.Entries" Filterable="true" SortMode="SortMode.Multiple" Hideable="false" Hover="true"
-                 FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6">
-        <ToolBarContent>
-            <MudText Class="ml-5 mt-5" Typo="Typo.h3"> Entries </MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                          AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <Columns>
-            <SelectColumn T="CVEntry"/>
-            <PropertyColumn Property="x => x.Name"/>
-            <PropertyColumn Title="Material" Property="x => x.We_Electrode._Descriptor.Material"/>
-            <PropertyColumn Title="Orientation" Property="x => x.We_Electrode._Descriptor.Crystallographic_orientation"/>
-            <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte._Descriptor.Type"/>
-            <PropertyColumn Title="Year" Property="x => x.Bibliography.Year"/>
-            <TemplateColumn Filterable="false" Sortable="false">
-                <CellTemplate>
-                    <MudStack Row="true">
-                        <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.ShowChart" OnClick="@(e => GoToEntryDashboard(context.Item.Name))"/>
-                    </MudStack>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-        <PagerContent>
-            <MudDataGridPager T="CVEntry" />
-        </PagerContent>
-    </MudDataGrid>
-</MudStack>
+@if (state == 0)
+{
+    <MudStack Class="pa-10" AlignItems="AlignItems.Center">
+        <MudStack Row="true">
+            <MudText Typo="Typo.h3"><b>Loading</b></MudText>
+            <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
+        </MudStack>
+    </MudStack>
+}
+else if (state == 1)
+{
+    <MudStack Class="pa-10">
+        <MudDataGrid T="CVEntry" Items="@ViewModel.Entries" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Hideable="false" Hover="true"
+                     FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6">
+            <ToolBarContent>
+                <MudText Class="ml-5 mt-5" Typo="Typo.h4">Cyclic Voltammograms</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="CVEntry" />
+                <PropertyColumn Property="x => x.Name" />
+                <PropertyColumn Title="Material" Property="x => x.We_Electrode.Material" />
+                <PropertyColumn Title="Orientation" Property="x => x.We_Electrode.CrystallographicOrientation" />
+                <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte.Type" />
+                <PropertyColumn Title="Year" Property="x => x.Bibliography.Year" />
+                <TemplateColumn Title="Reference" Filterable="false" Sortable="false" Groupable="false">
+                    <CellTemplate>
+                        <MudStack Row="true">
+                            <MudLink Href="@($"{context.Item.Source.Url}")" Typo="Typo.body2">article</MudLink>
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+                <TemplateColumn Filterable="false" Sortable="false" Groupable="false">
+                    <CellTemplate>
+                        <MudStack Class="mr-1" Row="true">
+                            <MudIconButton Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Filled.ShowChart" OnClick="@(e => GoToEntryDashboard(context.Item.Name))" />
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="CVEntry" />
+            </PagerContent>
+        </MudDataGrid>
+    </MudStack>
+}
+else
+{
+    <MudStack Class="pa-10" AlignItems="AlignItems.Center">
+        <MudStack>
+            <MudText Typo="Typo.h3"><b>No entries were found</b></MudText>
+        </MudStack>
+    </MudStack>
+}
 
 @code {
 
@@ -70,7 +96,11 @@
     protected override async Task OnInitializedAsync()
     {
         await ViewModel.OnInitializedAsync();
+        if (ViewModel.Entries.Count > 0) { state = 1; }
+        else { state = 2; }
     }
+
+    private int state = 0;
 
     private string _searchString = string.Empty;
 
@@ -80,10 +110,13 @@
         if (string.IsNullOrWhiteSpace(_searchString))
             return true;
 
-        if (x.We_Electrode._Descriptor.Material.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.We_Electrode.Material.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
         if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.We_Electrode.CrystallographicOrientation.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
 
         if ($"{x.Bibliography.Year}".Contains(_searchString))
