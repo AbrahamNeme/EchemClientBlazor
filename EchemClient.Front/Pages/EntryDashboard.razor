@@ -2,11 +2,16 @@
 @inject IEntryDashboardViewModel ViewModel
 @inject NavigationManager NavigationManager
 
+<!--  Top App Bar  -->
 <MudAppBar Elevation="7" Color="Color.Primary">
     <LogoAppBar />
     <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
-                   Href="/" StartIcon="@Icons.Material.Filled.Home">Return to table</MudButton>
+                   Href="/entries-search" StartIcon="@Icons.Material.Filled.ArrowBack">Back</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/" StartIcon="@Icons.Material.Filled.Home">Home</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/about" StartIcon="@Icons.Material.Filled.Info">About</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
                    Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
@@ -15,14 +20,41 @@
     </MudStack>
 </MudAppBar>
 
-<MudStack Class="pa-10" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudStack Style="width:650px; height:550px;">
+@if (GetState() == 0)
+{
+    <Loading/>
+}
+else if (GetState() == 1)
+{
+    <MudStack Class="pa-10 ml-10 mr-10" AlignItems="AlignItems.Center">
+        <MudStack AlignItems="AlignItems.Start" Justify="Justify.Center">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <ElementCard Element="ViewModel.Element" />
+                <MudText Typo="Typo.h3" Class="ml-10"><b>(@ViewModel.Entry.We_Electrode.CrystallographicOrientation) - @ViewModel.Entry.GetElectrolyteComposition()</b></MudText>
+            </MudStack>
+            <MudStack Class="mt-5">
+                <MudText Typo="Typo.h5"><b>echemdb identifier: @ViewModel.Entry.Name</b></MudText>
+                <MudText Typo="Typo.body1">@ViewModel.Entry.Citation</MudText>
+                </MudStack>
+            </MudStack>
+    </MudStack>
+}
+<MudStack Class="pa-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+    <MudStack Style="width:750px; height:600px;">
         <canvas id="mainChart"></canvas>
     </MudStack>
-    <MudStack Style="width:650px; height:550px;">
-        <canvas id="refChart"></canvas>
-    </MudStack>
 </MudStack>
+
+@if(GetState() == 0)
+{
+    <Loading/>
+}
+else
+{
+    <MudStack Class="pa-10 ml-10 mr-10" AlignItems="AlignItems.Center">
+        <EntryMetadata ViewModel="@ViewModel"/>
+    </MudStack>
+}
 
 @code {
 
@@ -40,13 +72,20 @@
     {
         try
         {
-            if (firstRender) { await ViewModel.DrawCVCharts(); }
-            else { await ViewModel.UpdateCVCharts(); }
+            if (firstRender) 
+            { await ViewModel.DrawCVChart(); }
+            else { await ViewModel.UpdateCVChart(); }
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private int GetState()
+    {
+        if (string.IsNullOrEmpty(ViewModel.Element.Name)) { return 0; }
+        else { return 1; }
     }
 
     private void Deserialize()

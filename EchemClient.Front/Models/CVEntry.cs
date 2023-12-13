@@ -1,4 +1,6 @@
-﻿namespace EchemClient.Front.Models
+﻿using System.Text;
+
+namespace EchemClient.Front.Models
 {
     public class CVEntry
     {
@@ -19,6 +21,22 @@
         public Bibliography Bibliography { get; set; } = new();
 
         public CVEntry() { }
+
+        public string GetElectrolyteComposition()
+        {
+            StringBuilder compositionBuilder = new();
+
+            foreach (var component in Electrolyte.Components)
+            {
+                if (component.Name == "water") { compositionBuilder.Append($"{component.Concentration?.Value} H2O + "); }
+                else { compositionBuilder.Append($"{component.Concentration?.Value} {component.Name} + "); }
+            }
+            if (compositionBuilder.Length >= 3) // Check if there are at least 3 characters (length of " + ") in the string
+            {
+                compositionBuilder.Length -= 3; // Remove the last 3 characters (length of " + ")
+            }
+            return compositionBuilder.ToString();
+        }
 
     }
 }

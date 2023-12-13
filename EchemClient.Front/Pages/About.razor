@@ -1,0 +1,19 @@
+﻿@page "/about"
+
+<!--  Top App Bar  -->
+<MudAppBar Elevation="7" Color="Color.Primary">
+    <LogoAppBar />
+    <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/" StartIcon="@Icons.Material.Filled.Home">Home</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="https://echemdb.github.io/unitpackage/index.html" StartIcon="@Icons.Custom.FileFormats.FileDocument">Documentation</MudButton>
+        <ThemeButton />
+    </MudStack>
+</MudAppBar>
+
+@code {
+
+}

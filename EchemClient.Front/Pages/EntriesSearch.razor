@@ -2,11 +2,14 @@
 @inject IEntriesSearchViewModel ViewModel
 @inject NavigationManager NavigationManager
 
+<!--  Top App Bar  -->
 <MudAppBar Elevation="7" Color="Color.Primary">
     <LogoAppBar />
     <MudStack Row="true" Justify="Justify.FlexEnd" Style="width: 70%">
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
-                   Href="/" StartIcon="@Icons.Material.Filled.Home">Return to table</MudButton>
+                   Href="/" StartIcon="@Icons.Material.Filled.Home">Home</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
+                   Href="/about" StartIcon="@Icons.Material.Filled.Info">About</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
                    Href="https://github.com/echemdb" StartIcon="@Icons.Custom.Brands.GitHub">GitHub</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Style="color: white;" DisableElevation="true" DisableRipple="true"
@@ -31,12 +34,7 @@
 
 @if (state == 0)
 {
-    <MudStack Class="pa-10" AlignItems="AlignItems.Center">
-        <MudStack Row="true">
-            <MudText Typo="Typo.h3"><b>Loading</b></MudText>
-            <MudProgressCircular Color="Color.Primary" Size="Size.Large" Indeterminate="true" />
-        </MudStack>
-    </MudStack>
+    <Loading/>
 }
 else if (state == 1)
 {
@@ -52,9 +50,9 @@ else if (state == 1)
             <Columns>
                 <SelectColumn T="CVEntry" />
                 <PropertyColumn Property="x => x.Name" />
-                <PropertyColumn Title="Material" Property="x => x.We_Electrode.Material" />
-                <PropertyColumn Title="Orientation" Property="x => x.We_Electrode.CrystallographicOrientation" />
-                <PropertyColumn Title="Eletrolyte" Property="x => x.Electrolyte.Type" />
+                <PropertyColumn Title="Material" Style="width:45px;" Property="x => x.We_Electrode.Material" />
+                <PropertyColumn Title="Orientation" Style="width:50px;" Property="x => x.We_Electrode.CrystallographicOrientation" />
+                <PropertyColumn Title="Eletrolyte" Property="x => x.GetElectrolyteComposition()" />
                 <PropertyColumn Title="Year" Property="x => x.Bibliography.Year" />
                 <TemplateColumn Title="Reference" Filterable="false" Sortable="false" Groupable="false">
                     <CellTemplate>
@@ -102,29 +100,6 @@ else
 
     private int state = 0;
 
-    private string _searchString = string.Empty;
-
-    // quick filter - filter globally across multiple columns with the same input
-    private Func<CVEntry, bool> _quickFilter => x =>
-    {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-
-        if (x.We_Electrode.Material.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if (x.We_Electrode.CrystallographicOrientation.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-
-        if ($"{x.Bibliography.Year}".Contains(_searchString))
-            return true;
-
-        return false;
-    };
-
     private void Deserialize()
     {
         var urlParameter = NavigationManager.Uri;
@@ -151,4 +126,27 @@ else
         var serializedName = JsonSerializer.Serialize(entryName);
         NavigationManager.NavigateTo($"/entry-dashboard?name={Uri.EscapeDataString(serializedName)}");
     }
+
+    private string _searchString = string.Empty;
+
+    // quick filter - filter globally across multiple columns with the same input
+    private Func<CVEntry, bool> _quickFilter => x =>
+    {
+        if (string.IsNullOrWhiteSpace(_searchString))
+            return true;
+
+        if (x.We_Electrode.Material.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (x.We_Electrode.CrystallographicOrientation.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{x.Bibliography.Year} {x.GetElectrolyteComposition()}".Contains(_searchString))
+            return true;
+
+        return false;
+    };
 }

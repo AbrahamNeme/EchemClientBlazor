@@ -1,6 +1,7 @@
 using Blazored.LocalStorage;
 using CommunityToolkit.Mvvm.Messaging;
 using EchemClient.Front;
+using EchemClient.Front.Services.ElementService;
 using EchemClient.Front.Services.EntryService;
 using EchemClient.Front.Services.SessionStorageService;
 using EchemClient.Front.Services.ThemeService;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<IHomeViewModel, HomeViewModel>();
 builder.Services.AddScoped<IEntriesSearchViewModel, EntriesSearchViewModel>();
 builder.Services.AddScoped<IEntryDashboardViewModel, EntryDashboardViewModel>();
 builder.Services.AddScoped<IEntryService, EntryService>();
+builder.Services.AddScoped<IElementService, ElementService>();
 
 
 await builder.Build().RunAsync();
