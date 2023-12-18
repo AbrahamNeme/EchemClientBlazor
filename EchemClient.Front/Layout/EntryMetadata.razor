@@ -1,6 +1,158 @@
 ﻿
-<MudStack Style="width:800px;">
+<MudStack Class="mt-5" AlignItems="AlignItems.Center" Style="width:1200px;">
     <MudText Typo="Typo.h4"><b>Metadata</b></MudText>
+    <MudTabs Class="mt-5" Elevation="6" Rounded="true" Centered="true" Color="@Color.Primary" Style="width:1200px;">
+        <MudTabPanel Text="Electrochemical system">
+            <MudPaper Class="pa-5" Square="false" Outlined="true">
+                <MudText><b>- Working electrode (@ViewModel.Entry.We_Electrode.Name):</b></MudText>
+                <MudText Class="ml-5"><b>Material:</b> @ViewModel.Entry.We_Electrode.Material</MudText>
+                    <MudText Class="ml-5"><b>Crystallographic orientation:</b> @ViewModel.Entry.We_Electrode.CrystallographicOrientation</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.GeometricElectrolyteContactArea))
+                {
+                    <MudText Class="ml-5"><b>Geometric electrolyte contact area:</b> @ViewModel.Entry.We_Electrode.GeometricElectrolyteContactArea</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.PreparationProcedure))
+                {
+                    <MudText Class="ml-5"><b>Preparation procedure:</b> @ViewModel.Entry.We_Electrode.PreparationProcedure</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Diameter?.Unit) || !string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Height?.Unit)
+                || !string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Type))
+                {
+                    <MudText Class="ml-5"><b>Shape:</b></MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Diameter?.Unit))
+                {
+                    <MudText Class="ml-10"><b>Diameter:</b></MudText>
+                    <MudText Class="pl-5 ml-10"><b>Unit:</b> @ViewModel.Entry.We_Electrode.Shape?.Diameter?.Unit</MudText>
+                    <MudText Class="pl-5 ml-10"><b>Value:</b> @ViewModel.Entry.We_Electrode.Shape?.Diameter?.Value</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Height?.Unit))
+                {
+                    <MudText Class="ml-10"><b>Height:</b></MudText>
+                    <MudText Class="pl-5 ml-10"><b>Unit:</b> @ViewModel.Entry.We_Electrode.Shape?.Height?.Unit</MudText>
+                    <MudText Class="pl-5 ml-10"><b>Value:</b> @ViewModel.Entry.We_Electrode.Shape?.Height?.Value</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Shape?.Type))
+                {
+                    <MudText Class="ml-10"><b>Type:</b>  @ViewModel.Entry.We_Electrode.Shape?.Type</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.We_Electrode.Source?.Supplier))
+                {
+                    <MudText Class="ml-5"><b>Source:</b></MudText>
+                    <MudText Class="ml-10"><b>Supplier:</b> @ViewModel.Entry.We_Electrode.Source?.Supplier</MudText>
+                }
+
+                <MudText Class="mt-5"><b>- Reference electrode (@ViewModel.Entry.Ref_Electrode.Name):</b></MudText>
+                <MudText Class="ml-5"><b>Type:</b> @ViewModel.Entry.Ref_Electrode.Type</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.Ref_Electrode.Source))
+                {
+                    <MudText Class="ml-5"><b>Source:</b> @ViewModel.Entry.Ref_Electrode.Source</MudText>
+                }
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.Ref_Electrode.Supplier))
+                {
+                    <MudText Class="ml-5"><b>Supplier:</b> @ViewModel.Entry.Ref_Electrode.Supplier</MudText>
+                }
+
+                <MudText Class="mt-5"><b>- Counter electrode (@ViewModel.Entry.Ce_Electrode?.Name):</b></MudText>
+                <MudText Class="ml-5"><b>Material:</b> @ViewModel.Entry.Ce_Electrode?.Material</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.Ce_Electrode?.CrystallographicOrientation))
+                {
+                    <MudText Class="ml-5"><b>Crystallographic orientation:</b> @ViewModel.Entry.Ce_Electrode?.CrystallographicOrientation</MudText>
+                }
+                <MudText Class="ml-5"><b>Shape:</b> @ViewModel.Entry.Ce_Electrode?.Shape</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.Ce_Electrode?.Supplier))
+                {
+                    <MudText Class="ml-5"><b>Supplier:</b> @ViewModel.Entry.Ce_Electrode?.Supplier</MudText>
+                }
+
+                <MudText Class="mt-5"><b>- Electrolyte:</b></MudText>
+                <MudText Class="ml-5"><b>Components:</b></MudText>
+                @foreach (var component in ViewModel.Entry.Electrolyte.Components)
+                {
+                    <MudText Class="ml-10"><b>- Name:</b> @component.Name</MudText>
+                    <MudText Class="ml-10"><b>Type:</b> @component.Type</MudText>
+                    if (!string.IsNullOrEmpty(component.Concentration?.Unit))
+                    {
+                        <MudText Class="ml-10"><b>Concentration:</b></MudText>
+                        <MudText Class="pl-5 ml-10"><b>Unit:</b> @component.Concentration.Unit</MudText>
+                        <MudText Class="pl-5 ml-10"><b>Value:</b> @component.Concentration.Value</MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Proportion?.Unit))
+                    {
+                        <MudText Class="ml-10"><b>Proportion:</b></MudText>
+                        <MudText Class="pl-5 ml-10"><b>Unit:</b> @component.Proportion.Unit</MudText>
+                        <MudText Class="pl-5 ml-10"><b>Value:</b> @component.Proportion.Value</MudText>
+                    }
+                    if (string.IsNullOrEmpty(component.Purity?.Grade) && !string.IsNullOrEmpty(component.Source?.Supplier))
+                    {
+                        <MudText Class="ml-10"><b>Source:</b></MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Source?.Supplier))
+                    {
+                        <MudText Class="pl-5 ml-10"><b>Supplier:</b> @component.Source.Supplier</MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Source?.Quality))
+                    {
+                        <MudText Class="pl-5 ml-10"><b>Quality:</b> @component.Source.Quality</MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Source?.SuppliedPurity?.Grade?.Unit))
+                    {
+                        <MudText Class="pl-5 ml-10"><b>Purity grade:</b></MudText>
+                        <MudText Class="pl-10 ml-10"><b>Unit:</b> @component.Source.SuppliedPurity?.Grade?.Unit</MudText>
+                        <MudText Class="pl-10 ml-10"><b>Value:</b> @component.Source.SuppliedPurity?.Grade?.Value</MudText>
+                    }
+                    if (string.IsNullOrEmpty(component.Source?.SuppliedPurity?.Grade?.Unit) && !string.IsNullOrEmpty(component.Purity?.Grade))
+                    {
+                        <MudText Class="ml-10"><b>Purity:</b></MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Purity?.Grade))
+                    {
+                        <MudText Class="pl-5 ml-10"><b>Grade:</b> @component.Purity.Grade</MudText>
+                    }
+                    if (!string.IsNullOrEmpty(component.Purity?.Refinement))
+                    {
+                        <MudText Class="pl-5 ml-10"><b>Refinement:</b> @component.Purity.Refinement</MudText>
+                    }
+                }
+                <MudText Class="ml-5"><b>Ph:</b></MudText>
+                <MudText Class="ml-10"><b>Value:</b> @ViewModel.Entry.Electrolyte.Ph?.Value</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.Electrolyte.Temperature?.Unit))
+                {
+                    <MudText Class="ml-5"><b>Temperature:</b></MudText>
+                    <MudText Class="ml-10"><b>Unit:</b> @ViewModel.Entry.Electrolyte.Temperature?.Unit</MudText>
+                    <MudText Class="ml-10"><b>Value:</b> @ViewModel.Entry.Electrolyte.Temperature?.Value</MudText>
+                }
+                <MudText Class="ml-5"><b>Type:</b> @ViewModel.Entry.Electrolyte.Type</MudText>
+            </MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Entry source">
+            <MudPaper Class="pa-5" Square="false" Outlined="true">
+                    <MudText><b>- Citation key:</b> @ViewModel.Entry.Source.CitationKey</MudText>
+                    <MudText><b>- URL:</b> @ViewModel.Entry.Source.Url</MudText>
+                    @if (!string.IsNullOrEmpty(ViewModel.Entry.Source.GetTechniques()))
+                {
+                    <MudText><b>- Techniques:</b> @ViewModel.Entry.Source.GetTechniques()</MudText>
+                }
+                <MudText><b>- Figure:</b> @ViewModel.Entry.Source.Figure</MudText>
+                    <MudText><b>- Curve:</b> @ViewModel.Entry.Source.Curve</MudText>
+                    <MudText><b>- Bibdata:</b> @ViewModel.Entry.Source.BibData</MudText>
+            </MudPaper>
+        </MudTabPanel>
+        <MudTabPanel Text="Bibliography">
+            <MudPaper Class="pa-5" Square="false" Outlined="true">
+                    <MudText><b>- Type:</b> @ViewModel.Entry.Bibliography.Type</MudText>
+                    <MudText><b>- Title:</b> @ViewModel.Entry.Bibliography.Title</MudText>
+                    <MudText><b>- Journal:</b> @ViewModel.Entry.Bibliography.Journal</MudText>
+                    <MudText><b>- Volume:</b> @ViewModel.Entry.Bibliography.Volume</MudText>
+                    <MudText><b>- Number:</b> @ViewModel.Entry.Bibliography.Number</MudText>
+                    <MudText><b>- Pages:</b> @ViewModel.Entry.Bibliography.Pages</MudText>
+                    <MudText><b>- Year:</b> @ViewModel.Entry.Bibliography.Year</MudText>
+                    <MudText><b>- Authors:</b> @ViewModel.Entry.Bibliography.GetAuthors()</MudText>
+            </MudPaper>
+        </MudTabPanel>
+    </MudTabs>
+
+    <!--
     <MudExpansionPanels MultiExpansion="true" Elevation="6">
         <MudExpansionPanel Class="mt-5" Text="Electrochemical system">
             <MudText><b>- Working electrode (@ViewModel.Entry.We_Electrode.Name):</b></MudText>
@@ -118,7 +270,7 @@
                 @if (!string.IsNullOrEmpty(ViewModel.Entry.Electrolyte.Temperature?.Unit))
             {
                 <MudText Class="ml-5"><b>Temperature:</b></MudText>
-                <MudText Class="ml-10"><b>Value:</b> @ViewModel.Entry.Electrolyte.Temperature?.Unit</MudText>
+                <MudText Class="ml-10"><b>Unit:</b> @ViewModel.Entry.Electrolyte.Temperature?.Unit</MudText>
                 <MudText Class="ml-10"><b>Value:</b> @ViewModel.Entry.Electrolyte.Temperature?.Value</MudText>
             }
             <MudText Class="ml-5"><b>Type:</b> @ViewModel.Entry.Electrolyte.Type</MudText>
@@ -146,7 +298,7 @@
             <MudText><b>- Year:</b> @ViewModel.Entry.Bibliography.Year</MudText>
             <MudText><b>- Authors:</b> @ViewModel.Entry.Bibliography.GetAuthors()</MudText>
         </MudExpansionPanel>
-    </MudExpansionPanels>
+        </MudExpansionPanels>   -->
 </MudStack>
 
     @code {

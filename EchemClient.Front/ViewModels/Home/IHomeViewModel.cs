@@ -8,6 +8,6 @@ namespace EchemClient.Front.ViewModels.Home
         Element HoveredElement { get; set; }
         string SearchString { get; set; }
 
-        List<Element> GetSelectedElements();
+        void SendElements();
     }
 }

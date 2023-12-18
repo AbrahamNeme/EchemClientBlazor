@@ -9,6 +9,7 @@ namespace EchemClient.Front.ViewModels.EntryDashboard
         Element Element { get; set; }
 
         Task OnInitializedAsync();
+        void Deserialize();
         Task DrawCVChart();
         Task UpdateCVChart();
     }

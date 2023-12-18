@@ -8,6 +8,7 @@ using EchemClient.Front.Services.ThemeService;
 using EchemClient.Front.ViewModels.EntriesSearch;
 using EchemClient.Front.ViewModels.EntryDashboard;
 using EchemClient.Front.ViewModels.Home;
+using EchemClient.Front.ViewModels.Multiplot;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
@@ -26,6 +27,7 @@ builder.Services.AddScoped<ISessionStorageService, SessionStorageService>();
 builder.Services.AddScoped<IHomeViewModel, HomeViewModel>();
 builder.Services.AddScoped<IEntriesSearchViewModel, EntriesSearchViewModel>();
 builder.Services.AddScoped<IEntryDashboardViewModel, EntryDashboardViewModel>();
+builder.Services.AddScoped<IMultiplotViewModel, MultiplotViewModel>();
 builder.Services.AddScoped<IEntryService, EntryService>();
 builder.Services.AddScoped<IElementService, ElementService>();
 

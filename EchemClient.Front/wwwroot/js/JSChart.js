@@ -11,7 +11,7 @@ const getRandomColor = () => {
 
 const charts = {};
 
-window.drawCyclicVoltammogram = (canvasId, title, datasetName, jData, jUnit, eData, eUnit) => {
+window.drawCyclicVoltammogram = (canvasId, title, datasetName, jData, eData) => {
     const ctx = document.getElementById(canvasId).getContext('2d');
 
     charts[canvasId] = new Chart(ctx, {
@@ -88,4 +88,87 @@ window.deleteCyclicVoltammogram = (chartId) => {
         chart.destroy();
         delete charts[chartId];
     }
+};
+
+
+
+
+const createChartDatasets = (datasetNames, jDatas, eDatas) => {
+    const datasets = [];
+
+    for (let i = 0; i < datasetNames.length; i++) {
+        const datasetName = datasetNames[i];
+        const jData = jDatas[i];
+        const eData = eDatas[i];
+
+        const chartDataset = {
+            label: datasetName,
+            data: jData.map((y, dataIndex) => ({ x: eData[dataIndex], y })),
+            borderColor: getRandomColor(),
+            showLine: true,
+            borderWidth: 2,
+            fill: false,
+        };
+        datasets.push(chartDataset);
+    }
+    return datasets;
+}
+
+window.drawMultipleCyclicVoltammogram = (canvasId, title, datasetNames, jDatas, eDatas) => {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+
+    charts[canvasId] = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            labels: eDatas, // We leave this empty since each dataset may have different eData
+            datasets: createChartDatasets(datasetNames, jDatas, eDatas),
+        },
+        options: {
+            title: {
+                display: true,
+                text: title,
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    title: {
+                        display: true,
+                        text: 'x-label',
+                    },
+                },
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'y-label',
+                    },
+                },
+            },
+            maintainAspectRatio: false,
+            responsive: true,
+            maxWidth: 800,
+            maxHeight: 600,
+            interaction: {
+                mode: 'nearest',
+            },
+            
+        },
+    });
+};
+
+window.updateMultipleCyclicVoltammogram = (canvasId, datasetNames, jDatas, eDatas) => {
+    const chart = charts[canvasId];
+
+    if (!chart) {
+        console.error(`Chart with ID ${canvasId} not found.`);
+        return;
+    }
+    // Clear existing datasets
+    chart.data.datasets = [];
+
+    chart.data.labels = eDatas; // Update labels if needed
+    chart.data.datasets = createChartDatasets(datasetNames, jDatas, eDatas);
+    chart.update(); // Update the chart
 };

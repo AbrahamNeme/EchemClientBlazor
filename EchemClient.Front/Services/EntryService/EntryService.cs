@@ -64,5 +64,23 @@ namespace EchemClient.Front.Services.EntryService
                 return new CVEntry();
             }
         }
+
+        public async Task<List<CVEntry>> GetCVEntriesByNameAsync(string names)
+        {
+            try
+            {
+                var response = await _httpClient.GetFromJsonAsync<List<CVEntry>>($"api/entriesbyname/{names}/");
+                if (response != null)
+                {
+                    return response;
+                }
+                else { return []; }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return [];
+            }
+        }
     }
 }

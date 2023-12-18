@@ -1,7 +1,5 @@
 ﻿@page "/"
-@using System.Text.Json
 @inject IHomeViewModel ViewModel
-@inject NavigationManager NavigationManager
 
 <!--  Top App Bar  -->
 <MudAppBar Elevation="7" Color="Color.Primary">
@@ -29,7 +27,7 @@
         <MudTextField @bind-Value="ViewModel.SearchString" Label="Type in or click the element(s) you are looking for" Adornment="Adornment.End" Immediate="true" Clearable="true"
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" AdornmentColor="Color.Primary" Class="mt-0" Variant="Variant.Outlined"
                       HelperText="please leave a blank space between elements" HelperTextOnFocus="true"></MudTextField>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SendElements" Style="height:55px;">Search</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ViewModel.SendElements" Style="height:55px;">Search</MudButton>
     </MudStack>
 </MudStack>
 
@@ -254,17 +252,9 @@
     {
         StateHasChanged();
     }
-
-    public void SendElements()
-    {
-        var serializedList = JsonSerializer.Serialize(ViewModel.GetSelectedElements());
-        ViewModel.SearchString = "";
-        NavigationManager.NavigateTo($"/entries-search?list={Uri.EscapeDataString(serializedList)}");
-    }
 }
 
 <style>
-
     .legend {
         width: 20px;
         height: 20px;

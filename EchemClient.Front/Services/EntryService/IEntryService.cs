@@ -7,5 +7,6 @@ namespace EchemClient.Front.Services.EntryService
         Task<List<CVEntry>> GetAllCVEntriesAsync();
         Task<List<CVEntry>> GetCVEntriesByMaterialAsync(string material);
         Task<CVEntry> GetCVEntryByNameAsync(string name);
+        Task<List<CVEntry>> GetCVEntriesByNameAsync(string names);
     }
 }
