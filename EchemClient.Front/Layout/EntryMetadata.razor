@@ -1,9 +1,9 @@
 ﻿
-<MudStack Class="mt-5" AlignItems="AlignItems.Center" Style="width:1200px;">
+<MudStack AlignItems="AlignItems.Center">
     <MudText Typo="Typo.h4"><b>Metadata</b></MudText>
-    <MudTabs Class="mt-5" Elevation="6" Rounded="true" Centered="true" Color="@Color.Primary" Style="width:1200px;">
+    <MudTabs Class="mt-3 mr-5" Elevation="6" Rounded="true" Centered="true" Color="@Color.Primary" Style="width:600px;">
         <MudTabPanel Text="Electrochemical system">
-            <MudPaper Class="pa-5" Square="false" Outlined="true">
+            <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:520px; overflow:auto;">
                 <MudText><b>- Working electrode (@ViewModel.Entry.We_Electrode.Name):</b></MudText>
                 <MudText Class="ml-5"><b>Material:</b> @ViewModel.Entry.We_Electrode.Material</MudText>
                     <MudText Class="ml-5"><b>Crystallographic orientation:</b> @ViewModel.Entry.We_Electrode.CrystallographicOrientation</MudText>
@@ -126,7 +126,7 @@
             </MudPaper>
         </MudTabPanel>
         <MudTabPanel Text="Entry source">
-            <MudPaper Class="pa-5" Square="false" Outlined="true">
+                <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:520px; overflow:auto;">
                     <MudText><b>- Citation key:</b> @ViewModel.Entry.Source.CitationKey</MudText>
                     <MudText><b>- URL:</b> @ViewModel.Entry.Source.Url</MudText>
                     @if (!string.IsNullOrEmpty(ViewModel.Entry.Source.GetTechniques()))
@@ -139,7 +139,7 @@
             </MudPaper>
         </MudTabPanel>
         <MudTabPanel Text="Bibliography">
-            <MudPaper Class="pa-5" Square="false" Outlined="true">
+                <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:520px; overflow:auto;">
                     <MudText><b>- Type:</b> @ViewModel.Entry.Bibliography.Type</MudText>
                     <MudText><b>- Title:</b> @ViewModel.Entry.Bibliography.Title</MudText>
                     <MudText><b>- Journal:</b> @ViewModel.Entry.Bibliography.Journal</MudText>

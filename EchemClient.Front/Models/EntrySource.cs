@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace EchemClient.Front.Models
 {
@@ -29,6 +31,18 @@ namespace EchemClient.Front.Models
                 }
                 return techniquesBuilder.ToString();
             }
+        }
+
+        public string ExtractAbstract()
+        {
+            string pattern = @"abstract\s*=\s*""([^""]*)""";
+            Match match = Regex.Match(BibData, pattern);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+            return string.Empty;
         }
     }
 }

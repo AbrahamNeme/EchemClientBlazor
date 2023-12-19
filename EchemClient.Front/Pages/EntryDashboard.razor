@@ -33,30 +33,35 @@ else if (GetState() == 1)
             </MudStack>
             <MudStack Class="mt-5">
                 <MudText Typo="Typo.h5"><b>echemdb identifier: @ViewModel.Entry.Name</b></MudText>
-                <MudText Typo="Typo.body1">@ViewModel.Entry.Citation</MudText>
-                </MudStack>
+                <MudText Typo="Typo.body1" Style="text-align: justify;">@ViewModel.Entry.Citation</MudText>
+                @if (!string.IsNullOrEmpty(ViewModel.Entry.Source.ExtractAbstract()))
+                {
+                    <MudText Class="mt-3" Typo="Typo.body1" Style="text-align: justify;">@ViewModel.Entry.Source.ExtractAbstract()</MudText>
+                }
+            </MudStack>
             </MudStack>
     </MudStack>
 }
 <!--  Entry Chart  -->
-<MudStack Class="pa-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
-    <MudStack Style="width:750px; height:600px;" AlignItems="AlignItems.Center">
-        <canvas id="mainChart"></canvas>
-        <MudText>E [V vs. @ViewModel.Entry.Ref_Electrode.Type]</MudText>
+<MudStack Class="pa-5 mb-10" Row="true" AlignItems="AlignItems.Start" Justify="Justify.Center">
+    @if (GetState() == 0)
+    {
+        <Loading />
+    }
+    else
+    {
+        <MudStack Class="mb-5" AlignItems="AlignItems.Center" Style="height:600px;">
+            <EntryMetadata ViewModel="@ViewModel" />
+        </MudStack>
+    }
+    <MudStack Row AlignItems="AlignItems.Center">
+        <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
+        <MudStack Style="width:700px; height:600px;" AlignItems="AlignItems.Center">
+            <canvas id="mainChart"></canvas>
+            <MudText>E [V vs. @ViewModel.Entry.Ref_Electrode.Type]</MudText>
+        </MudStack>
     </MudStack>
 </MudStack>
-
-@if(GetState() == 0)
-{
-    <Loading/>
-}
-else
-{
-    <MudStack Class="pa-10 ml-10 mr-10" AlignItems="AlignItems.Center">
-        <EntryMetadata ViewModel="@ViewModel"/>
-    </MudStack>
-}
 
 @code {
 
