@@ -23,7 +23,7 @@
         <MudSpacer />
         
     </MudStack>
-    <MudStack Class="mt-5" Row="true">
+    <MudStack Class="mt-5" Row="true" Style="display: flex; flex-wrap: wrap;">
         @foreach (var element in ViewModel.Elements)
         {
             <ElementCard Element="element"/>
@@ -40,7 +40,8 @@ else if (state == 1)
     <!--  Entries Datatable  -->
     <MudStack Class="pa-10">
         <MudDataGrid T="CVEntry" Items="@ViewModel.Entries" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Hideable="false" Hover="true" MultiSelection="true"
-                     @bind-SelectedItems="@ViewModel.SelectedEntries" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6">
+                     @bind-SelectedItems="@ViewModel.SelectedEntries" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6"
+                     Height="600px" FixedHeader="true" Virtualize="true">
             <ToolBarContent>
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Style="width:100%">
                     <MudText Class="ml-5 mt-5" Typo="Typo.h4">Cyclic Voltammograms</MudText>

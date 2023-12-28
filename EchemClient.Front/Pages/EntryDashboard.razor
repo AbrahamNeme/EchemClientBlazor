@@ -44,6 +44,13 @@ else if (GetState() == 1)
 }
 <!--  Entry Chart  -->
 <MudStack Class="pa-5 mb-10" Row="true" AlignItems="AlignItems.Start" Justify="Justify.Center">
+    <MudStack Row AlignItems="AlignItems.Center">
+         <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
+         <MudStack Style="width:700px; height:600px;" AlignItems="AlignItems.Center">
+             <canvas id="mainChart"></canvas>
+             <MudText>E [V vs. @ViewModel.Entry.Ref_Electrode.Type]</MudText>
+         </MudStack>
+    </MudStack>
     @if (GetState() == 0)
     {
         <Loading />
@@ -51,16 +58,10 @@ else if (GetState() == 1)
     else
     {
         <MudStack Class="mb-5" AlignItems="AlignItems.Center" Style="height:600px;">
-            <EntryMetadata ViewModel="@ViewModel" />
+            <EntryMetadata Entry="@ViewModel.Entry" />
         </MudStack>
     }
-    <MudStack Row AlignItems="AlignItems.Center">
-        <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
-        <MudStack Style="width:700px; height:600px;" AlignItems="AlignItems.Center">
-            <canvas id="mainChart"></canvas>
-            <MudText>E [V vs. @ViewModel.Entry.Ref_Electrode.Type]</MudText>
-        </MudStack>
-    </MudStack>
+
 </MudStack>
 
 @code {

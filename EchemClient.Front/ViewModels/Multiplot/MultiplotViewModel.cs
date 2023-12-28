@@ -59,6 +59,7 @@ namespace EchemClient.Front.ViewModels.Multiplot
                 var serializedList = Uri.UnescapeDataString(queryString.Split('=')[1]);
                 try
                 {
+                    EntryNames = string.Empty;
                     EntryNames = JsonSerializer.Deserialize<string>(serializedList) ?? string.Empty;
                 }
                 catch (JsonException ex)

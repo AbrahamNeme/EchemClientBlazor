@@ -19,12 +19,20 @@
     </MudStack>
 </MudAppBar>
 
-<MudStack Class="pa-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
+<MudStack Class="pa-5 mt-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
     <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
     <MudStack Style="width:750px; height:600px;" AlignItems="AlignItems.Center">
         <canvas id="@ViewModel.ChartId"></canvas>
-        <MudText>E [V vs. ]</MudText>
+        <MudText>E [V vs. REF]</MudText>
     </MudStack>
+    @if (GetState())
+    {
+        <PaginatedMetadata Entries="@ViewModel.Entries" />
+    }
+    else
+    {
+        <Loading />
+    }
 </MudStack>
 
 @code {
@@ -36,10 +44,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try { await ViewModel.DeleteMultipleCVCharts(); }
-        catch (Exception ex) { Console.WriteLine(ex.Message); }
         await ViewModel.OnInitializedAsync();
-
     }
 
     private bool draw = true;
@@ -50,7 +55,8 @@
         {
             if (draw)
             { await ViewModel.DrawMultipleCVCharts();
-              draw = false;
+                Console.WriteLine("chart drawn"); 
+                draw = false;
             }
             await ViewModel.UpdateMultipleCVCharts();
         }
@@ -58,5 +64,11 @@
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    private bool GetState()
+    {
+        if (ViewModel.Entries.Count > 1) { return true; }
+        else { return false; }
     }
 }

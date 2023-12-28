@@ -75,6 +75,7 @@ namespace EchemClient.Front.ViewModels.EntriesSearch
             }
             entryNames.Length -= 1;
             var serializedList = JsonSerializer.Serialize(entryNames.ToString());
+            SelectedEntries.Clear();
             _navigationManager.NavigateTo($"/multiplot?list={Uri.EscapeDataString(serializedList)}");
         }
 

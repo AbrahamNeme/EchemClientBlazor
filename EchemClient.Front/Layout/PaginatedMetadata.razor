@@ -1,0 +1,20 @@
+﻿
+
+<MudStack AlignItems="AlignItems.Center">
+    <MudText Class="mb-3" Typo="Typo.h5">@(Entries[(selected - 1)].Name)</MudText>
+    <EntryMetadata Entry="@(Entries[(selected - 1)])" />
+    <MudPagination Class="mt-3" Color="Color.Primary" Count="@Entries.Count" SelectedChanged="SelectedChanged" />
+</MudStack>
+
+@code {
+    [Parameter]
+    public List<CVEntry> Entries { get; set; } = [];
+
+    private int selected = 1;
+
+    private void SelectedChanged(int page)
+    {
+        selected = page;
+        StateHasChanged();
+    }
+}

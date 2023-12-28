@@ -92,7 +92,6 @@ window.deleteCyclicVoltammogram = (chartId) => {
 
 
 
-
 const createChartDatasets = (datasetNames, jDatas, eDatas) => {
     const datasets = [];
 
