@@ -1,0 +1,38 @@
+﻿
+<MudPaper Class="mb-3" Outlined="true" Style="width:760px; height:135px;">
+    <MudStack Class="pa-0" Row="true" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Stretch">
+        <MudStack Justify="Justify.FlexStart" Style="height:inherit">
+            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@REF" Label="REF" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@SCE" Label="SCE" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@REH" Label="REH" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+        </MudStack>
+        <MudStack Justify="Justify.FlexStart" Style="height:inherit">
+            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@concentration" Label="Electrolyte concentration" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@scanRate" Label="Scan rate" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+        </MudStack>
+        <MudStack Justify="Justify.Center" Style="height:inherit">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary">Normalize</MudButton>
+        </MudStack>
+    </MudStack>
+</MudPaper>
+
+@code {
+    public bool REF { get; set; } = false;
+    public bool SCE { get; set; } = false;
+    public bool REH { get; set; } = false;
+    public bool concentration { get; set; } = false;
+    public bool scanRate { get; set; } = false;
+
+    private void FisrtNormChanged(ChangeEventArgs args)
+    {
+        if (REF) { SCE = false; REH = false; }
+        else if (SCE) { REF = false; REH = false; }
+        else if (REH) { REF = false; SCE = false; }
+    }
+
+    private void SecondNormChanged(ChangeEventArgs args)
+    {
+        if (concentration) { scanRate = false; }
+        else if (scanRate) { concentration = false; }
+    }
+}

@@ -7,5 +7,6 @@ namespace EchemClient.Front.Services.ElementService
         List<Element> Elements { get; }
 
         Element GetElementBySymbol(string symbol);
+        List<Element> FromStringToList(string elements);
     }
 }

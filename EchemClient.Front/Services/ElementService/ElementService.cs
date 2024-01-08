@@ -129,5 +129,20 @@ namespace EchemClient.Front.Services.ElementService
         {
             return Elements.Where(e => e.Symbol == symbol).First();
         }
+
+        public List<Element> FromStringToList(string elements)
+        {
+            List<string> stringsList = elements.Split(' ').ToList();
+            List<Element> elementsList = [];
+
+            if (stringsList.Count > 0)
+            {
+                foreach (string element in stringsList)
+                {
+                    elementsList.AddRange(Elements.Where(e => e.Symbol == element).ToList());
+                }
+            }
+            return elementsList;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using EchemClient.Front.Models;
+using EchemClient.Front.Services.ElementService;
 using EchemClient.Front.Services.EntryService;
+using EchemClient.Front.Services.SessionStorageService;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using System.Text;
@@ -21,18 +23,27 @@ namespace EchemClient.Front.ViewModels.EntriesSearch
 
         private readonly IJSRuntime _jsRuntime;
         private readonly IEntryService _entryService;
+        private readonly ISessionStorageService _sessionStorageService;
+        private readonly IElementService _elementService;
         private readonly NavigationManager _navigationManager;
 
-        public EntriesSearchViewModel(IJSRuntime jsRuntime, IEntryService entryService, NavigationManager navigationManager) 
+        public EntriesSearchViewModel(IJSRuntime jsRuntime, IEntryService entryService, ISessionStorageService sessionStorageService, 
+            IElementService elementService, NavigationManager navigationManager) 
         {
             _jsRuntime = jsRuntime;
             _entryService = entryService;
+            _sessionStorageService = sessionStorageService;
+            _elementService = elementService;
             _navigationManager = navigationManager;
         }
 
         public async Task OnInitializedAsync()
         {
             Entries.Clear();
+            if (Elements.Count < 1)
+            {
+                Elements = _elementService.FromStringToList(await _sessionStorageService.GetItem("selectedElements"));
+            }
             foreach (var element in Elements) 
             {
                 Entries.AddRange(await _entryService.GetCVEntriesByMaterialAsync(element.Symbol));
@@ -43,7 +54,6 @@ namespace EchemClient.Front.ViewModels.EntriesSearch
         {
             var urlParameter = _navigationManager.Uri;
             var queryString = Uri.UnescapeDataString(new Uri(urlParameter).Query.TrimStart('?'));
-            Console.WriteLine($"serializing JSON list: {queryString}");
 
             if (!string.IsNullOrEmpty(queryString))
             {

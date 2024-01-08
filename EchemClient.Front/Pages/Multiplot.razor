@@ -19,10 +19,14 @@
     </MudStack>
 </MudAppBar>
 
-<MudStack Class="pa-5 mt-5" Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
-    <MudStack Style="width:750px; height:600px;" AlignItems="AlignItems.Center">
-        <canvas id="@ViewModel.ChartId"></canvas>
+<MudStack Class="pa-5 mt-5" Row="true" AlignItems="AlignItems.Start" Justify="Justify.Center">
+    
+    <MudStack AlignItems="AlignItems.Center">
+        <NormalizationPanel />
+        <MudStack Class="mr-3" Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Style="width:750px; height:600px;">
+            <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
+            <canvas id="@ViewModel.ChartId"></canvas>
+        </MudStack>
         <MudText>E [V vs. REF]</MudText>
     </MudStack>
     @if (GetState())

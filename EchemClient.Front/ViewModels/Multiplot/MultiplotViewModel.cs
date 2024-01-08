@@ -52,7 +52,6 @@ namespace EchemClient.Front.ViewModels.Multiplot
         {
             var urlParameter = _navigationManager.Uri;
             var queryString = Uri.UnescapeDataString(new Uri(urlParameter).Query.TrimStart('?'));
-            Console.WriteLine($"serializing JSON list: {queryString}");
 
             if (!string.IsNullOrEmpty(queryString))
             {
@@ -81,12 +80,10 @@ namespace EchemClient.Front.ViewModels.Multiplot
                 EData = EData.Append(entry.E).ToArray();
                 JData = JData.Append(entry.J).ToArray();
             }
-            Console.WriteLine($"Number of chart datasets on populate: {DatasetNames.Length}");
         }
 
         public async Task DrawMultipleCVCharts()
         {
-            Console.WriteLine($"Number of chart datasets on draw: {DatasetNames.Length}");
             await _jsRuntime.InvokeVoidAsync("drawMultipleCyclicVoltammogram", ChartId, DatasetNames, JData, EData);
         }
 
