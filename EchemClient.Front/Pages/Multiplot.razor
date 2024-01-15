@@ -22,16 +22,16 @@
 <MudStack Class="pa-5 mt-5" Row="true" AlignItems="AlignItems.Start" Justify="Justify.Center">
     
     <MudStack AlignItems="AlignItems.Center">
-        <NormalizationPanel />
+        <NormalizationPanel ViewModel="@ViewModel" OnFunctionExecuted="HandleRerender"/>
         <MudStack Class="mr-3" Row="true" Justify="Justify.Center" AlignItems="AlignItems.Center" Style="width:750px; height:600px;">
-            <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [uA / cm2]</MudText>
+            <MudText Style="writing-mode: vertical-lr; transform:rotate(180deg);">j [@ViewModel.JUnits]</MudText>
             <canvas id="@ViewModel.ChartId"></canvas>
         </MudStack>
-        <MudText>E [V vs. REF]</MudText>
+        <MudText>E vs. @ViewModel.LegendReference [V]</MudText>
     </MudStack>
     @if (GetState())
     {
-        <PaginatedMetadata Entries="@ViewModel.Entries" />
+        <PaginatedMetadata Entries="@ViewModel.Entries"/>
     }
     else
     {
@@ -74,5 +74,10 @@
     {
         if (ViewModel.Entries.Count > 1) { return true; }
         else { return false; }
+    }
+
+    private void HandleRerender()
+    {
+        StateHasChanged();
     }
 }

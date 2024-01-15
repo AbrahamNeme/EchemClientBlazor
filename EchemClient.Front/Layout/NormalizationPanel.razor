@@ -1,38 +1,43 @@
 ﻿
-<MudPaper Class="mb-3" Outlined="true" Style="width:760px; height:135px;">
-    <MudStack Class="pa-0" Row="true" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Stretch">
+<MudPaper Class="mb-1" Outlined="true" Style="width:760px; height:150px;">
+    <MudStack Class="pa-0" Row="true" Justify="Justify.SpaceEvenly" AlignItems="AlignItems.Center">
         <MudStack Justify="Justify.FlexStart" Style="height:inherit">
-            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@REF" Label="REF" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
-            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@SCE" Label="SCE" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
-            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@REH" Label="REH" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n3" @bind-Checked="@ViewModel.ReferenceNormalization" Label="Reference" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n3" @bind-Checked="@ViewModel.ScanRateNormalization" Label="Scan rate" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudCheckBox Class="mb-n3" @bind-Checked="@ViewModel.ElectrolyteConcentrationNormalization" Label="Electrolyte concentration" LabelPosition="LabelPosition.End"
+                         Color="Color.Primary"></MudCheckBox>
         </MudStack>
+
         <MudStack Justify="Justify.FlexStart" Style="height:inherit">
-            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@concentration" Label="Electrolyte concentration" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
-            <MudCheckBox Class="mb-n4" T="bool" @bind-Checked="@scanRate" Label="Scan rate" LabelPosition="LabelPosition.End" Color="Color.Primary"></MudCheckBox>
+            <MudSelect @bind-Value="@ViewModel.SelectedReference" Label="Select a reference" Variant="Variant.Outlined" Clearable="true" Disabled="@(!ViewModel.ReferenceNormalization)" 
+                       Style="height:55px; width:240px;" Class="mt-3 mb-n7">
+                       <Virtualize Items="@ViewModel.Refs" Context="reference">
+                           <MudSelectItem Value="reference.Key">
+                               <MudText> @reference.Key</MudText>
+                           </MudSelectItem>
+                       </Virtualize>
+            </MudSelect>
+            <MudTextField @bind-Value="@ViewModel.SelectedScanRate" Label="Reference scan rate in V/s" Variant="Variant.Outlined" Clearable="true" Disabled="@(!ViewModel.ScanRateNormalization)"
+                          Style="height:55px; width:240px;" Immediate="true"></MudTextField>
         </MudStack>
+
         <MudStack Justify="Justify.Center" Style="height:inherit">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary">Normalize</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@NormalizeData">Normalize</MudButton>
         </MudStack>
     </MudStack>
 </MudPaper>
 
 @code {
-    public bool REF { get; set; } = false;
-    public bool SCE { get; set; } = false;
-    public bool REH { get; set; } = false;
-    public bool concentration { get; set; } = false;
-    public bool scanRate { get; set; } = false;
 
-    private void FisrtNormChanged(ChangeEventArgs args)
-    {
-        if (REF) { SCE = false; REH = false; }
-        else if (SCE) { REF = false; REH = false; }
-        else if (REH) { REF = false; SCE = false; }
-    }
+    [Parameter]
+    public IMultiplotViewModel ViewModel { get; set; } = default!;
 
-    private void SecondNormChanged(ChangeEventArgs args)
+    [Parameter]
+    public EventCallback OnFunctionExecuted { get; set; }
+
+    private async Task NormalizeData()
     {
-        if (concentration) { scanRate = false; }
-        else if (scanRate) { concentration = false; }
+        ViewModel.NormalizeData();
+        await OnFunctionExecuted.InvokeAsync(null);
     }
 }

@@ -26,10 +26,42 @@ namespace EchemClient.Front.ViewModels.Multiplot
         public double[][] _jData = [];
 
         [ObservableProperty]
-        public bool _hasDeleted = false;
+        public string _chartId = string.Empty;
 
         [ObservableProperty]
-        public string _chartId = string.Empty;
+        public bool _referenceNormalization;
+
+        [ObservableProperty]
+        public bool _scanRateNormalization;
+
+        [ObservableProperty]
+        public bool _electrolyteConcentrationNormalization;
+
+        [ObservableProperty]
+        public string _selectedReference = string.Empty;
+
+        [ObservableProperty]
+        public string _legendReference = string.Empty;
+
+        [ObservableProperty]
+        public string _selectedScanRate = string.Empty;
+
+        [ObservableProperty]
+        public string _jUnits = "A / m2";
+
+        [ObservableProperty]
+        public Dictionary<string, double> _refs = new()
+        {
+            { "Ag/AgCl", 4.637 },      
+            { "Ag/AgCl-sat", 4.637 },
+            { "Ag/AgCl_3M", 4.637 },
+            { "Hg/HgO/0.1 M NaOH", 4.9 },  // Dummy data
+            { "RHE", 4.44 },  // Dummy Data
+            { "SCE", 4.688 },
+            { "wire", 5.55 },  // Dummy Data
+            { "SHE", 4.44 },
+            { "NCE", 4.720 }
+        };
 
         private readonly IEntryService _entryService;
         private readonly IJSRuntime _jsRuntime;
@@ -80,6 +112,64 @@ namespace EchemClient.Front.ViewModels.Multiplot
                 EData = EData.Append(entry.E).ToArray();
                 JData = JData.Append(entry.J).ToArray();
             }
+        }
+
+        public void NormalizeData()
+        {
+            if (ReferenceNormalization)
+            {
+                NormalizeByReference();
+            }
+            if (ScanRateNormalization)
+            {
+                NormalizeByScanRate();
+            }
+            if (ElectrolyteConcentrationNormalization)
+            {
+                NormalizeByElectrolyteConcentration();
+            }
+        }
+        private void NormalizeByReference()
+        {
+            if (SelectedReference == string.Empty || SelectedReference == null) { SelectedReference = "SHE"; }
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                double deltaRef = Refs[Entries[i].Ref_Electrode.Type] - Refs[SelectedReference];
+                EData[i] = EData[i].Select(x => x + deltaRef).ToArray();
+            }
+            LegendReference = SelectedReference;
+        }
+
+        private void NormalizeByScanRate()
+        {
+            double refScanRate = new();
+            if (SelectedScanRate == string.Empty || SelectedScanRate == null) { refScanRate = 0.05; }
+            else {
+                try { refScanRate = Convert.ToDouble(SelectedScanRate); }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    refScanRate = 0.05;
+                }
+            }
+            for (int i = 0; i < Entries.Count; i++)
+            {
+                double entryScanRate = new();
+                if (Entries[i].ScanRate_unit.Contains("mV")) { entryScanRate = Entries[i].ScanRate_value / 1000.0; }
+                else { entryScanRate = Entries[i].ScanRate_value; }
+                double deltaScanRate = entryScanRate - refScanRate;
+                JData[i] = JData[i].Select(x => x + deltaScanRate).ToArray();
+
+                string[] units = Entries[i].J_Unit.Split('/');    // Normally A / m2
+                if (units[0] == "A") { JData[i] = JData[i].Select(x => x * 1e6).ToArray(); }
+                if (units[1] == "m2") { JData[i] = JData[i].Select(x => x * 1e4).ToArray(); }
+            }
+            JUnits = "μA / cm2";
+        }
+
+        private void NormalizeByElectrolyteConcentration()
+        {
+            throw new NotImplementedException();
         }
 
         public async Task DrawMultipleCVCharts()

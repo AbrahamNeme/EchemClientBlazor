@@ -6,11 +6,13 @@ namespace EchemClient.Front.Models
     {
         public string Name { get; set; } = string.Empty;
         public double[] T { get; set; } = [];
-        public string TUnit { get; set; } = string.Empty;
+        public string T_Unit { get; set; } = string.Empty;
         public double[] E { get; set; } = [];
-        public string EUnit { get; set; } = string.Empty;
+        public string E_Unit { get; set; } = string.Empty;
         public double[] J { get; set; } = [];
-        public string JUnit { get; set; } = string.Empty;
+        public string J_Unit { get; set; } = string.Empty;
+        public double ScanRate_value { get; set; } = 0;
+        public string ScanRate_unit { get; set; } = string.Empty;
 
         public We_Electrode We_Electrode { get; set; } = new();
         public Ref_Electrode Ref_Electrode { get; set; } = new();

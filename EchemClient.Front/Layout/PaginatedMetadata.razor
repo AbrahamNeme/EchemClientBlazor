@@ -1,8 +1,8 @@
 ﻿
 
 <MudStack AlignItems="AlignItems.Center">
-    <MudText Class="mb-2" Typo="Typo.h5">@(Entries[(selected - 1)].Name)</MudText>
-    <MudPagination Class="mb-2" Color="Color.Primary" Count="@Entries.Count" SelectedChanged="SelectedChanged" />
+    <MudText Class="mb-3" Typo="Typo.h5"><b>@(Entries[(selected - 1)].Name)</b></MudText>
+    <MudPagination Class="mb-3" Color="Color.Primary" Count="@Entries.Count" SelectedChanged="SelectedChanged" />
     <EntryMetadata Entry="@(Entries[(selected - 1)])" />
 </MudStack>
 

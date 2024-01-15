@@ -68,7 +68,7 @@
                 <MudText Class="ml-5"><b>Components:</b></MudText>
                 @foreach (var component in Entry.Electrolyte.Components)
                 {
-                    <MudText Class="ml-10"><b>- Name:</b> @component.Name</MudText>
+                    <MudText Class="ml-10"><b>* Name:</b> @component.Name</MudText>
                     <MudText Class="ml-10"><b>Type:</b> @component.Type</MudText>
                     if (!string.IsNullOrEmpty(component.Concentration?.Unit))
                     {
@@ -122,6 +122,9 @@
                     <MudText Class="ml-10"><b>Value:</b> @Entry.Electrolyte.Temperature?.Value</MudText>
                 }
                 <MudText Class="ml-5"><b>Type:</b> @Entry.Electrolyte.Type</MudText>
+                <MudText Class="mt-5"><b>- Scan rate:</b></MudText>
+                <MudText Class="ml-10"><b>Unit:</b> @Entry.ScanRate_unit</MudText>
+                <MudText Class="ml-10"><b>Value:</b> @Entry.ScanRate_value</MudText>
             </MudPaper>
         </MudTabPanel>
         <MudTabPanel Text="Entry source">
