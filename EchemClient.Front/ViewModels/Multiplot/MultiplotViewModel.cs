@@ -116,6 +116,7 @@ namespace EchemClient.Front.ViewModels.Multiplot
 
         public void NormalizeData()
         {
+            PopulateChartDatasets();
             if (ReferenceNormalization)
             {
                 NormalizeByReference();
@@ -157,19 +158,19 @@ namespace EchemClient.Front.ViewModels.Multiplot
                 double entryScanRate = new();
                 if (Entries[i].ScanRate_unit.Contains("mV")) { entryScanRate = Entries[i].ScanRate_value / 1000.0; }
                 else { entryScanRate = Entries[i].ScanRate_value; }
-                double deltaScanRate = entryScanRate - refScanRate;
-                JData[i] = JData[i].Select(x => x + deltaScanRate).ToArray();
+                double scanRateRatio = entryScanRate / refScanRate;
+                JData[i] = JData[i].Select(x => x / scanRateRatio).ToArray();
 
                 string[] units = Entries[i].J_Unit.Split('/');    // Normally A / m2
-                if (units[0] == "A") { JData[i] = JData[i].Select(x => x * 1e6).ToArray(); }
-                if (units[1] == "m2") { JData[i] = JData[i].Select(x => x * 1e4).ToArray(); }
+                if (units[0] == "A ") { JData[i] = JData[i].Select(x => x * 1e6).ToArray(); }
+                if (units[1] == " m2") { JData[i] = JData[i].Select(x => x / 1e4).ToArray(); }
             }
             JUnits = "μA / cm2";
         }
 
         private void NormalizeByElectrolyteConcentration()
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public async Task DrawMultipleCVCharts()
