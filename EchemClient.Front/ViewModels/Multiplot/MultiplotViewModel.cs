@@ -121,10 +121,12 @@ namespace EchemClient.Front.ViewModels.Multiplot
             {
                 NormalizeByReference();
             }
+            else { LegendReference = string.Empty; }
             if (ScanRateNormalization)
             {
                 NormalizeByScanRate();
             }
+            else { JUnits = "A / m2"; }
             if (ElectrolyteConcentrationNormalization)
             {
                 NormalizeByElectrolyteConcentration();
@@ -144,7 +146,7 @@ namespace EchemClient.Front.ViewModels.Multiplot
         private void NormalizeByScanRate()
         {
             double refScanRate = new();
-            if (SelectedScanRate == string.Empty || SelectedScanRate == null) { refScanRate = 0.05; }
+            if (SelectedScanRate == string.Empty || SelectedScanRate == null) { refScanRate = 0.05; SelectedScanRate = "0.05"; }
             else {
                 try { refScanRate = Convert.ToDouble(SelectedScanRate); }
                 catch (Exception e)
