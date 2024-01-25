@@ -153,6 +153,7 @@ namespace EchemClient.Front.ViewModels.Multiplot
                 {
                     Console.WriteLine(e.Message);
                     refScanRate = 0.05;
+                    SelectedScanRate = "0.05";
                 }
             }
             for (int i = 0; i < Entries.Count; i++)
