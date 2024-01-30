@@ -42,8 +42,6 @@ window.drawCyclicVoltammogram = (canvasId, title, datasetName, jData, eData) => 
                     }
                 },
                 y: {
-                    //min: Math.min(...jData),
-                    //max: Math.max(...jData)
                     type: 'linear',
                     position: 'left',
                     title: {
@@ -63,7 +61,9 @@ window.drawCyclicVoltammogram = (canvasId, title, datasetName, jData, eData) => 
                 callbacks: {
                     label: (tooltipItem, data) => {
                         const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-                        return `E: ${value.x}, j: ${value.y}`;
+                        const formattedX = Number(value.x).toFixed(4);
+                        const formattedY = Number(value.y).toFixed(4);
+                        return `E: ${formattedX}, j: ${formattedY}`;
                     }
                 }
             }
@@ -119,7 +119,7 @@ window.drawMultipleCyclicVoltammogram = (canvasId, title, datasetNames, jDatas, 
     charts[canvasId] = new Chart(ctx, {
         type: 'scatter',
         data: {
-            labels: eDatas, // We leave this empty since each dataset may have different eData
+            labels: eDatas,
             datasets: createChartDatasets(datasetNames, jDatas, eDatas),
         },
         options: {
@@ -152,7 +152,16 @@ window.drawMultipleCyclicVoltammogram = (canvasId, title, datasetNames, jDatas, 
             interaction: {
                 mode: 'nearest',
             },
-            
+            tooltips: {
+                callbacks: {
+                    label: (tooltipItem, data) => {
+                        const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                        const formattedX = Number(value.x).toFixed(4);
+                        const formattedY = Number(value.y).toFixed(4);
+                        return `E: ${formattedX}, j: ${formattedY}`;
+                    }
+                }
+            }
         },
     });
 };

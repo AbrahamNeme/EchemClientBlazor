@@ -2,7 +2,7 @@
 <MudStack AlignItems="AlignItems.Center">
     <MudTabs Class="ml-5" Elevation="0" Rounded="true" Centered="true" Color="@Color.Primary" Style="width:600px;">
         <MudTabPanel Text="Electrochemical system">
-            <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:580px; overflow:auto;">
+            <MudPaper Class="pa-5 mt-n1" Square="false" Outlined="true" Style="height:590px; overflow:auto;">
                 <MudText><b>- Working electrode (@Entry.We_Electrode.Name):</b></MudText>
                 <MudText Class="ml-5"><b>Material:</b> @Entry.We_Electrode.Material</MudText>
                     <MudText Class="ml-5"><b>Crystallographic orientation:</b> @Entry.We_Electrode.CrystallographicOrientation</MudText>
@@ -128,7 +128,7 @@
             </MudPaper>
         </MudTabPanel>
         <MudTabPanel Text="Entry source">
-                <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:580px; overflow:auto;">
+                <MudPaper Class="pa-5 mt-n1" Square="false" Outlined="true" Style="height:590px; overflow:auto;">
                     <MudText><b>- Citation key:</b> @Entry.Source.CitationKey</MudText>
                     <MudText><b>- URL:</b> @Entry.Source.Url</MudText>
                     @if (!string.IsNullOrEmpty(Entry.Source.GetTechniques()))
@@ -141,7 +141,7 @@
             </MudPaper>
         </MudTabPanel>
         <MudTabPanel Text="Bibliography">
-                <MudPaper Class="pa-5" Square="false" Outlined="true" Style="height:580px; overflow:auto;">
+                <MudPaper Class="pa-5 mt-n1" Square="false" Outlined="true" Style="height:590px; overflow:auto;">
                     <MudText><b>- Type:</b> @Entry.Bibliography.Type</MudText>
                     <MudText><b>- Title:</b> @Entry.Bibliography.Title</MudText>
                     <MudText><b>- Journal:</b> @Entry.Bibliography.Journal</MudText>
