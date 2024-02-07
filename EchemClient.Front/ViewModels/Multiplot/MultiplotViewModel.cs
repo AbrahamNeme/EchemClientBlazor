@@ -74,7 +74,7 @@ namespace EchemClient.Front.ViewModels.Multiplot
             _navigationManager = navigationManager;
         }
 
-        public async Task OnInitializedAsync()
+        public async Task OnInitializedAsync()                      //  briega_martos_2018_understanding_j3045_p1_f1a_black  pajkossy_2001_double_3063_f2_inset
         {
             Entries = await _entryService.GetCVEntriesByNameAsync(EntryNames);
             PopulateChartDatasets();   

@@ -38,9 +38,9 @@
 else if (state == 1)
 {
     <!--  Entries Datatable  -->
-    <MudStack Class="pa-10">
+    <MudStack Class="pa-10 mt-n5">
         <MudDataGrid T="CVEntry" Items="@ViewModel.Entries" Filterable="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Hideable="false" Hover="true" MultiSelection="true"
-                     @bind-SelectedItems="@ViewModel.SelectedEntries" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="6"
+                     @bind-SelectedItems="@ViewModel.SelectedEntries" FilterCaseSensitivity="DataGridFilterCaseSensitivity.CaseInsensitive" Groupable="true" Elevation="0" Outlined="true"
                      Height="540px" FixedHeader="true" Virtualize="true">
             <ToolBarContent>
                 <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Style="width:100%">
@@ -48,7 +48,7 @@ else if (state == 1)
                     <MudSpacer />
                     <MudButton Class="mr-10 mt-4" Variant="Variant.Filled" Color="Color.Primary" Style="color: white; height:40px;" Disabled="@ViewModel.IsMultiplotDisabled()"
                                OnClick="ViewModel.GoToMultiplot">Multiplot</MudButton>
-                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                    <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true" Clearable="true"
                                   AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="ml-5"></MudTextField>
                 </MudStack>
             </ToolBarContent>
